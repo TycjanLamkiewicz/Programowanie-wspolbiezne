@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Data
 {
-    public abstract class IBall
+    public interface IBall
     {
         public abstract float Position_x { get; }
         public abstract float Position_y { get;}
@@ -12,6 +12,8 @@ namespace Data
         public abstract float Speed_y { get; set; } 
         public abstract int Radius { get;}
         public abstract int Mass { get; }
+
+        public event EventHandler PositionChange;
 
         public static IBall CreateBall(float position_x, float position_y, float speed_x, float speed_y, int radius, int mass) 
         {

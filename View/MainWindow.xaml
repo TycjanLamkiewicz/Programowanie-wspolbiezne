@@ -4,9 +4,36 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:View"
+        xmlns:vm="clr-namespace:ViewModel;assembly=ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Kule" Height="700" Width="1200">
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
     <Grid>
+        <Label Content="Podaj ilość kul" Margin="19,92,811,442" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="170" Height="50"/>
+        <TextBox Text="{Binding NumberOfBalls}" IsEnabled="{Binding IsRunning}" Margin="19,147,811,387" TextWrapping="Wrap" FontSize="34" Height="50" Width="170" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"/>
+        <Button Command ="{Binding CommandStart}" Content="Start" Margin="19,292,811,242" FontSize="20" Width="170" Height="50"/>
+        <Button Command ="{Binding CommandReset}" Content="Reset" Margin="19,374,811,160" FontSize="20" Width="170" Height="50"/>
 
+        <ItemsControl ItemsSource="{Binding BallsModel}" Margin="240,92,60,92" Height="400" Width="700">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas Background="#588157" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+            <Style TargetType="ContentPresenter">
+                <Setter Property="Canvas.Left" Value="{Binding Position_x}"/>
+                <Setter Property="Canvas.Top" Value="{Binding Position_y}"/>
+            </Style>
+            </ItemsControl.ItemContainerStyle>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Ellipse Width="{Binding Radius}" Height="{Binding Radius}"
+                             Fill="#000000"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </Window>
