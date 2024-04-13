@@ -13,7 +13,7 @@ namespace Data
         private int radius;
         private int mass;
         private Stopwatch stopwatch = new Stopwatch();
-        private int period = 10;
+        private int period = 4;
         private Task? task;
 
         public float Position_x { get => position_x; private set => position_x = value; }
@@ -23,7 +23,7 @@ namespace Data
         public int Radius { get => radius; }
         public int Mass { get => mass; }
 
-        public Ball(float position_x, float position_y, float speed_x, float speed_y, int radius, int mass) 
+    public Ball(float position_x, float position_y, float speed_x, float speed_y, int radius, int mass) 
         { 
             this.position_x = position_x;
             this.position_y = position_y;
@@ -44,8 +44,13 @@ namespace Data
 
         private void Move()
         {
+            Random rnd = new Random();
+            Speed_x = (float)(rnd.NextDouble() * 2 - 1);
+            Speed_y = (float)(rnd.NextDouble() * 2 - 1);
+
             Position_x += Speed_x;
             Position_y += Speed_y;
+
             OnPositionChange();
         }
 
@@ -61,7 +66,7 @@ namespace Data
                     stopwatch.Start();  
                     Move();
                     stopwatch.Stop();
-                    if (period - stopwatch.ElapsedMilliseconds >= 0)
+                    if (period - stopwatch.ElapsedMilliseconds > 0)
                     {
                         waiting = period - (int)stopwatch.ElapsedMilliseconds;
                     }
