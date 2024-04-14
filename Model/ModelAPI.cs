@@ -24,5 +24,10 @@ namespace Model
         {
             return new Model(LogicAPI.CreateAPI());
         }
+
+        public static ModelAPI CreateAPI(LogicAPI logicAPI)
+        {
+            return new Model(logicAPI);
+        }
     }
 }

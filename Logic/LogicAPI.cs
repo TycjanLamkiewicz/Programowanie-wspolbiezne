@@ -30,5 +30,10 @@ namespace Logic
         {
             return new Logic(DataAPI.CreateAPI());
         }
+
+        public static LogicAPI CreateAPI(DataAPI dataAPI)
+        {
+            return new Logic(dataAPI);
+        }
     }
 }
