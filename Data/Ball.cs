@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Dynamic;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Data
@@ -15,19 +16,62 @@ namespace Data
         private float speed_y;
         private int radius;
         private int mass;
+        private int tableWidth;
+        private int tableHeight;
+
+        private Thread thread;
+        private readonly object lockMove = new object();
+        private readonly object lockObject = new object();
+
         private Stopwatch stopwatch = new Stopwatch();
-        private int period = 4;
-        private Task? task;
+        private int period = 5;
 
         // Properties
-        public float Position_x { get => position_x; private set => position_x = value; }
-        public float Position_y { get => position_y; private set => position_y = value; }
-        public float Speed_x { get => speed_x; set => speed_x = value; }
-        public float Speed_y { get => speed_y; set => speed_y = value; }
-        public int Radius { get => radius; }
-        public int Mass { get => mass; }
-        public int TableWidth { get; set; }
-        public int TableHeight { get; set; }
+         public float Position_x
+    {
+        get { lock (lockObject) { return position_x; } }
+        private set { lock (lockObject) { position_x = value; } }
+    }
+
+    public float Position_y
+    {
+        get { lock (lockObject) { return position_y; } }
+        private set { lock (lockObject) { position_y = value; } }
+    }
+
+    public float Speed_x
+    {
+        get { lock (lockObject) { return speed_x; } }
+        set { lock (lockObject) { speed_x = value; } }
+    }
+
+    public float Speed_y
+    {
+        get { lock (lockObject) { return speed_y; } }
+        set { lock (lockObject) { speed_y = value; } }
+    }
+
+    public int Radius
+    {
+        get { lock (lockObject) { return radius; } }
+    }
+
+    public int Mass
+    {
+        get { lock (lockObject) { return mass; } }
+    }
+
+    public int TableWidth
+    {
+        get { lock (lockObject) { return tableWidth; } }
+        set { lock (lockObject) { tableWidth = value; } }
+    }
+
+    public int TableHeight
+    {
+        get { lock (lockObject) { return tableHeight; } }
+        set { lock (lockObject) { tableHeight = value; } }
+    }
 
         // Constructor
         public Ball(float position_x, float position_y, float speed_x, float speed_y, int radius, int mass, int tableWidth, int tableHeight) 
@@ -38,8 +82,8 @@ namespace Data
             this.speed_y = speed_y;
             this.radius = radius;
             this.mass = mass;
-            this.TableWidth = tableWidth;
-            this.TableHeight = tableHeight;
+            this.tableWidth = tableWidth;
+            this.tableHeight = tableHeight;
 
             CreateTask();   // Create a task to move the ball
         }
@@ -56,52 +100,20 @@ namespace Data
 
         private void Move()
         {
-            // Generate random speeds for x and y directions
-            Random rnd = new Random();
-            Speed_x = (float)(rnd.NextDouble() * 2 - 1);
-            Speed_y = (float)(rnd.NextDouble() * 2 - 1);
-
             // Update ball position based on current speed
-            Position_x += Speed_x;
-            Position_y += Speed_y;
-
-            // Ensure the ball stays within the boundaries of the table
-            EnsureWithinTableBounds();
-
+            lock (lockMove)
+            {
+                Position_x += Speed_x;
+                Position_y += Speed_y;
+            }
+            
             // Trigger the PositionChange event to indicate that the ball's position has changed.
             OnPositionChange();
         }
 
-        private void EnsureWithinTableBounds()
-        {
-            // Ensure the ball stays within the x-axis bounds of the table
-            if (Position_x < Radius)
-            {
-                Position_x = Radius; // Move the ball back within the bounds
-                Speed_x *= -1;       // Reverse the x-direction speed
-            }
-            else if (Position_x > TableWidth - Radius)
-            {
-                Position_x = TableWidth - Radius; // Move the ball back within the bounds
-                Speed_x *= -1;                    // Reverse the x-direction speed
-            }
-
-            // Ensure the ball stays within the y-axis bounds of the table
-            if (Position_y < Radius)
-            {
-                Position_y = Radius; // Move the ball back within the bounds
-                Speed_y *= -1;       // Reverse the y-direction speed
-            }
-            else if (Position_y > TableHeight - Radius)
-            {
-                Position_y = TableHeight - Radius; // Move the ball back within the bounds
-                Speed_y *= -1;                     // Reverse the y-direction speed
-            }
-        }
-
         private void CreateTask()
         {
-            task = Task.Run(async () =>
+            Task task = Task.Run(async () =>
             {
                 int waiting = 0;            // This variable will store the waiting time before the next ball movement is made.
 
@@ -132,12 +144,6 @@ namespace Data
                     await Task.Delay(waiting);
                 }
             });
-        }
-
-        // Method to dispose the task when needed
-        public void KillTask()
-        {
-            task.Dispose();
         }
     }
 }
