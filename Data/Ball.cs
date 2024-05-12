@@ -19,7 +19,6 @@ namespace Data
         private int tableWidth;
         private int tableHeight;
 
-        private Thread thread;
         private readonly object lockMove = new object();
         private readonly object lockObject = new object();
 
@@ -27,51 +26,51 @@ namespace Data
         private int period = 5;
 
         // Properties
-         public float Position_x
-    {
-        get { lock (lockObject) { return position_x; } }
-        private set { lock (lockObject) { position_x = value; } }
-    }
+        public float Position_x
+        {
+            get { lock (lockObject) { return position_x; } }
+            private set { lock (lockObject) { position_x = value; } }
+        }
 
-    public float Position_y
-    {
-        get { lock (lockObject) { return position_y; } }
-        private set { lock (lockObject) { position_y = value; } }
-    }
+        public float Position_y
+        {
+            get { lock (lockObject) { return position_y; } }
+            private set { lock (lockObject) { position_y = value; } }
+        }
 
-    public float Speed_x
-    {
-        get { lock (lockObject) { return speed_x; } }
-        set { lock (lockObject) { speed_x = value; } }
-    }
+        public float Speed_x
+        {
+            get { lock (lockObject) { return speed_x; } }
+            set { lock (lockObject) { speed_x = value; } }
+        }
 
-    public float Speed_y
-    {
-        get { lock (lockObject) { return speed_y; } }
-        set { lock (lockObject) { speed_y = value; } }
-    }
+        public float Speed_y
+        {
+            get { lock (lockObject) { return speed_y; } }
+            set { lock (lockObject) { speed_y = value; } }
+        }
 
-    public int Radius
-    {
-        get { lock (lockObject) { return radius; } }
-    }
+        public int Radius
+        {
+            get { lock (lockObject) { return radius; } }
+        }
 
-    public int Mass
-    {
-        get { lock (lockObject) { return mass; } }
-    }
+        public int Mass
+        {
+            get { lock (lockObject) { return mass; } }
+        }
 
-    public int TableWidth
-    {
-        get { lock (lockObject) { return tableWidth; } }
-        set { lock (lockObject) { tableWidth = value; } }
-    }
+        public int TableWidth
+        {
+            get { lock (lockObject) { return tableWidth; } }
+            set { lock (lockObject) { tableWidth = value; } }
+        }
 
-    public int TableHeight
-    {
-        get { lock (lockObject) { return tableHeight; } }
-        set { lock (lockObject) { tableHeight = value; } }
-    }
+        public int TableHeight
+        {
+            get { lock (lockObject) { return tableHeight; } }
+            set { lock (lockObject) { tableHeight = value; } }
+        }
 
         // Constructor
         public Ball(float position_x, float position_y, float speed_x, float speed_y, int radius, int mass, int tableWidth, int tableHeight) 
