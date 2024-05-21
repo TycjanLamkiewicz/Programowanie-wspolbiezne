@@ -12,7 +12,6 @@ namespace Data
         // List to store balls
         private List<IBall> balls = new List<IBall>();
 
-
         public override List<IBall>? Balls { get => balls; }
 
         public override void AddBall(IBall ball)
@@ -22,6 +21,10 @@ namespace Data
 
         public override void RemoveBalls()
         {
+            foreach (IBall ball in Balls)
+            {
+                ball.StopTask();
+            }
             balls.Clear();
         }
 
@@ -33,7 +36,7 @@ namespace Data
             {
                 foreach (IBall ball in Balls)
                 {
-                    positions.Add(new Vector2(ball.Position_x, ball.Position_y));
+                    positions.Add(ball.Position);
                 }
             }
            
@@ -42,7 +45,7 @@ namespace Data
 
         public override Vector2 GetPosition(IBall ball)
         {
-            return new Vector2(ball.Position_x, ball.Position_y);
+            return ball.Position;
         }
     }
 }

@@ -13,7 +13,6 @@ namespace Logic
         // DataAPI instance to handle data operations
         private DataAPI dataAPI;
 
-
         // Constructor (using DI)
         public Logic(DataAPI dataAPI)
         {
@@ -27,13 +26,11 @@ namespace Logic
             Random rnd = new Random();
             int radius = 25;    // All balls are assumed to be the same
             int mass = 5;
-            int tableWidth = 700;
-            int tableHeight = 400;
 
             // Generate balls with random positions and add them to the DataAPI
             for (int i = 0; i < num; i++) 
             {
-                IBall ball = IBall.CreateBall(rnd.Next(radius, width - radius), rnd.Next(radius, height - radius), 2, 2, radius, mass, tableWidth, tableHeight);
+                IBall ball = IBall.CreateBall(new Vector2(rnd.Next(radius, width - radius), rnd.Next(radius, height - radius)), new Vector2(2,2), radius, mass);
                 dataAPI.AddBall(ball);
                 ball.PositionChange += HandlePositionChange;    // For each ball, the PositionChange event is subscribed to in order to react to changes in the ball's position.
             }
@@ -72,33 +69,35 @@ namespace Logic
                 {
                     CheckCollisionWithWalls(ball);
                     CheckCollisionWithBalls(ball);
-                }
-                // Invoke the LogicEvent to signal any logic updates related to the ball's movement
-                LogicEvent?.Invoke(sender, EventArgs.Empty);
 
+                    // Invoke the LogicEvent to signal any logic updates related to the ball's movement
+                    LogicEvent?.Invoke(sender, EventArgs.Empty);
+                }
             }   
         }
+
+        private readonly int tableWidth = 700;
+        private readonly int tableHeight = 400;
 
         private void CheckCollisionWithWalls(IBall ball)
         {
             // Create a new vector to store the updated speed of the ball
-            Vector2 newSpeed = new Vector2(ball.Speed_x, ball.Speed_y);
+            Vector2 newSpeed = ball.Speed;
 
             // Ensure the ball stays within the x-axis bounds of the table
-            if (ball.Position_x < 0 || ball.Position_x + ball.Radius >= ball.TableWidth)
+            if (ball.Position.X < 0 || ball.Position.X + ball.Radius >= tableWidth)
             {
-                newSpeed.X = ball.Speed_x *= -1;       // Reverse the x-direction speed
+                newSpeed.X = ball.Speed.X * -1;       // Reverse the x-direction speed
             }
 
             // Ensure the ball stays within the y-axis bounds of the table
-            if (ball.Position_y < 0 || ball.Position_y + ball.Radius >= ball.TableHeight)
+            if (ball.Position.Y < 0 || ball.Position.Y + ball.Radius >= tableHeight)
             {
-                newSpeed.Y = ball.Speed_y *= -1;       // Reverse the y-direction speed
+                newSpeed.Y = ball.Speed.Y * -1;       // Reverse the y-direction speed
             }
 
             // Update the ball's speed with the new values
-            ball.Speed_x = newSpeed.X;
-            ball.Speed_y = newSpeed.Y;
+            ball.Speed = newSpeed;
         }
 
         // This method checks for collisions between the given ball and other balls on the table.
@@ -113,13 +112,13 @@ namespace Logic
                     if (!lastCollision.ContainsKey(ball) || (DateTime.Now - lastCollision[ball]).TotalMilliseconds > 100)
                     {
                         // Calculate the distance between the centers of the two balls
-                        float dx = ball.Position_x - ball2.Position_x;
-                        float dy = ball.Position_y - ball2.Position_y;
+                        float dx = ball.Position.X - ball2.Position.X;
+                        float dy = ball.Position.Y - ball2.Position.Y;
                         float distance = (float)Math.Sqrt(dx * dx + dy * dy);
 
                         // Check if the collision is close to the wall
-                        bool nearWall = ball.Position_x - ball.Radius <= 0 || ball.Position_x + ball.Radius >= ball.TableWidth ||
-                                        ball.Position_y - ball.Radius <= 0 || ball.Position_y + ball.Radius >= ball.TableHeight;
+                        bool nearWall = ball.Position.X - ball.Radius <= 0 || ball.Position.X + ball.Radius >= tableWidth ||
+                                        ball.Position.Y - ball.Radius <= 0 || ball.Position.Y + ball.Radius >= tableHeight;
 
                         // Check if a collision occurs and it's not near the wall
                         if (distance - ball.Radius <= 0 && !nearWall)
@@ -127,16 +126,14 @@ namespace Logic
                             float speed1_x, speed1_y, speed2_x, speed2_y;
 
                             // Calculate the new velocities of both balls after the collision
-                            speed1_x = (ball.Mass * ball.Speed_x + ball2.Mass * ball2.Speed_x - ball2.Mass * (ball.Speed_x - ball2.Speed_x)) / (ball.Mass + ball2.Mass);
-                            speed1_y = (ball.Mass * ball.Speed_y + ball2.Mass * ball2.Speed_y - ball2.Mass * (ball.Speed_y - ball2.Speed_y)) / (ball.Mass + ball2.Mass);
-                            speed2_x = (ball.Mass * ball.Speed_x + ball2.Mass * ball2.Speed_x - ball.Mass * (ball2.Speed_x - ball.Speed_x)) / (ball.Mass + ball2.Mass);
-                            speed2_y = (ball.Mass * ball.Speed_y + ball2.Mass * ball2.Speed_y - ball2.Mass * (ball2.Speed_y - ball.Speed_y)) / (ball.Mass + ball2.Mass);
+                            speed1_x = (ball.Mass * ball.Speed.X + ball2.Mass * ball2.Speed.X - ball2.Mass * (ball.Speed.X - ball2.Speed.X)) / (ball.Mass + ball2.Mass);
+                            speed1_y = (ball.Mass * ball.Speed.Y + ball2.Mass * ball2.Speed.Y - ball2.Mass * (ball.Speed.Y - ball2.Speed.Y)) / (ball.Mass + ball2.Mass);
+                            speed2_x = (ball.Mass * ball.Speed.X + ball2.Mass * ball2.Speed.X - ball.Mass * (ball2.Speed.X - ball.Speed.X)) / (ball.Mass + ball2.Mass);
+                            speed2_y = (ball.Mass * ball.Speed.Y + ball2.Mass * ball2.Speed.Y - ball2.Mass * (ball2.Speed.Y - ball.Speed.Y)) / (ball.Mass + ball2.Mass);
 
                             // Update the speeds of both balls
-                            ball.Speed_x = speed1_x;
-                            ball.Speed_y = speed1_y;
-                            ball2.Speed_x = speed2_x;
-                            ball2.Speed_y = speed2_y;
+                            ball.Speed = new Vector2(speed1_x, speed1_y);
+                            ball2.Speed = new Vector2(speed2_x, speed2_y);
 
                             lastCollision[ball] = DateTime.Now;
                             lastCollision[ball2] = DateTime.Now;

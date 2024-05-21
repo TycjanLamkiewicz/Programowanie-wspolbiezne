@@ -15,7 +15,6 @@ namespace LogicTests
             // List to store balls
             private List<IBall> balls = new List<IBall>();
 
-
             public override List<IBall>? Balls { get => balls; }
 
             public override void AddBall(IBall ball)
@@ -25,6 +24,10 @@ namespace LogicTests
 
             public override void RemoveBalls()
             {
+                foreach (IBall ball in Balls)
+                {
+                    ball.StopTask();
+                }
                 balls.Clear();
             }
 
@@ -36,7 +39,7 @@ namespace LogicTests
                 {
                     foreach (IBall ball in Balls)
                     {
-                        positions.Add(new Vector2(ball.Position_x, ball.Position_y));
+                        positions.Add(ball.Position);
                     }
                 }
 
@@ -45,86 +48,50 @@ namespace LogicTests
 
             public override Vector2 GetPosition(IBall ball)
             {
-                return new Vector2(ball.Position_x, ball.Position_y);
+                return ball.Position;
             }
         }
 
         internal class Ball : IBall
         {
             // Private fields
-            private float position_x;
-            private float position_y;
-            private float speed_x;
-            private float speed_y;
-            private int radius;
-            private int mass;
-            private int tableWidth;
-            private int tableHeight;
+            private Vector2 position;
+            private Vector2 speed;
+            private readonly int radius;
+            private readonly int mass;
 
-            private readonly object lockObject = new object();
+            private bool is_running = true;
+            private readonly int period = 5;
+            private readonly object lock_move = new object();
 
             // Properties
-            public float Position_x
-            {
-                get { lock (lockObject) { return position_x; } }
-                private set { lock (lockObject) { position_x = value; } }
-            }
-
-            public float Position_y
-            {
-                get { lock (lockObject) { return position_y; } }
-                private set { lock (lockObject) { position_y = value; } }
-            }
-
-            public float Speed_x
-            {
-                get { lock (lockObject) { return speed_x; } }
-                set { lock (lockObject) { speed_x = value; } }
-            }
-
-            public float Speed_y
-            {
-                get { lock (lockObject) { return speed_y; } }
-                set { lock (lockObject) { speed_y = value; } }
-            }
-
-            public int Radius
-            {
-                get { lock (lockObject) { return radius; } }
-            }
-
-            public int Mass
-            {
-                get { lock (lockObject) { return mass; } }
-            }
-
-            public int TableWidth
-            {
-                get { lock (lockObject) { return tableWidth; } }
-                set { lock (lockObject) { tableWidth = value; } }
-            }
-
-            public int TableHeight
-            {
-                get { lock (lockObject) { return tableHeight; } }
-                set { lock (lockObject) { tableHeight = value; } }
-            }
+            public Vector2 Position { get => position; private set => position = value; }
+            public Vector2 Speed { get => speed; set => speed = value; }
+            public int Radius { get => radius; }
+            public int Mass { get => mass; }
 
             // Constructor
-            public Ball(float position_x, float position_y, float speed_x, float speed_y, int radius, int mass, int tableWidth, int tableHeight)
+            public Ball(Vector2 position, Vector2 speed, int radius, int mass)
             {
-                this.position_x = position_x;
-                this.position_y = position_y;
-                this.speed_x = speed_x;
-                this.speed_y = speed_y;
+                this.position = position;
+                this.speed = speed;
                 this.radius = radius;
                 this.mass = mass;
-                this.tableWidth = tableWidth;
-                this.tableHeight = tableHeight;
             }
 
             // Event triggered when the position of the ball changes
             public event EventHandler PositionChange;
+
+            // This is a method that is responsible for calling the PositionChange event. 
+            // It calls the event, passing itself(this) as the event sender and EventArgs.Empty as the event argument (as it does not require additional information).
+            internal void OnPositionChange()
+            {
+                PositionChange?.Invoke(this, EventArgs.Empty);
+            }
+            public void StopTask()
+            {
+                is_running = false;
+            }
         }
 
         // Test for creating balls
