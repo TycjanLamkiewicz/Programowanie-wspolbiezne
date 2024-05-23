@@ -15,13 +15,21 @@ namespace Data
         private Vector2 speed;
         private readonly int radius;
         private readonly int mass;
-        
+
         private bool is_running = true;
         private readonly int period = 5;
         private readonly object lock_move = new object();
 
         // Properties
-        public Vector2 Position { get => position; private set => position = value; }
+        public Vector2 Position { 
+            get
+            {
+                lock (lock_move)
+                {
+                    return position;
+                }
+            }
+            private set => position = value; }
         public Vector2 Speed { get => speed; set => speed = value; }
         public int Radius { get => radius; }
         public int Mass { get => mass; }
@@ -53,10 +61,9 @@ namespace Data
             {
                 // Update ball position based on current speed
                 Position += Speed * 1;
-
-                // Trigger the PositionChange event to indicate that the ball's position has changed.
-                OnPositionChange();
             }
+            // Trigger the PositionChange event to indicate that the ball's position has changed.
+            OnPositionChange();
         }
 
         private void CreateTask()

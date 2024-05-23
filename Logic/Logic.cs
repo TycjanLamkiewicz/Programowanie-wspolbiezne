@@ -61,19 +61,15 @@ namespace Logic
         {
             // Cast the 'sender' object to an IBall interface to work with ball-specific properties
             IBall ball = (IBall)sender;
-
-            // Check if the sender object is not null
-            if (sender != null)
+            
+            lock (lockColision)
             {
-                lock (lockColision)
-                {
-                    CheckCollisionWithWalls(ball);
-                    CheckCollisionWithBalls(ball);
+                CheckCollisionWithWalls(ball);
+                CheckCollisionWithBalls(ball);
 
-                    // Invoke the LogicEvent to signal any logic updates related to the ball's movement
-                    LogicEvent?.Invoke(sender, EventArgs.Empty);
-                }
-            }   
+                // Invoke the LogicEvent to signal any logic updates related to the ball's movement
+                LogicEvent?.Invoke(sender, EventArgs.Empty);
+            }  
         }
 
         private readonly int tableWidth = 700;
