@@ -14,6 +14,7 @@ namespace Data
 
         public override List<IBall>? Balls { get => balls; }
 
+        /*
         private Logger logger;
         public event EventHandler PositionEvent;
 
@@ -27,11 +28,12 @@ namespace Data
             PositionEvent?.Invoke(sender, EventArgs.Empty);
             logger.Add((IBall)sender, DateTime.UtcNow.ToString("HH:mm:ss.fff"));
         }
+        */
 
         public override void AddBall(IBall ball)
         {
             balls.Add(ball);
-            ball.PositionChange += PositionChanged;
+            //ball.PositionChange += PositionChanged;
         }   
 
         public override void RemoveBalls()
