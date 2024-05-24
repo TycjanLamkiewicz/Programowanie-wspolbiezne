@@ -42,7 +42,6 @@ namespace DataTests
             Assert.Empty(dataApiMock.Object.Balls);
         }
 
-
         [Fact]
         public void GetPositions_ReturnsCorrectPositions()
         {
@@ -51,10 +50,8 @@ namespace DataTests
             var ball1 = new Mock<IBall>();
             var ball2 = new Mock<IBall>();
 
-            ball1.SetupGet(b => b.Position_x).Returns(10);
-            ball1.SetupGet(b => b.Position_y).Returns(20);
-            ball2.SetupGet(b => b.Position_x).Returns(30);
-            ball2.SetupGet(b => b.Position_y).Returns(40);
+            ball1.SetupGet(b => b.Position).Returns(new Vector2(10, 20));
+            ball2.SetupGet(b => b.Position).Returns(new Vector2(30, 40));
 
             dataApiMock.Setup(api => api.GetPositions()).Returns(new List<Vector2> { new Vector2(10, 20), new Vector2(30, 40) });
 
@@ -72,8 +69,7 @@ namespace DataTests
             var dataApiMock = new Mock<DataAPI>();
             var ballMock = new Mock<IBall>();
 
-            ballMock.SetupGet(b => b.Position_x).Returns(10);
-            ballMock.SetupGet(b => b.Position_y).Returns(20);
+            ballMock.SetupGet(b => b.Position).Returns(new Vector2(10, 20));
 
             dataApiMock.Setup(api => api.GetPosition(ballMock.Object)).Returns(new Vector2(10, 20));
 
