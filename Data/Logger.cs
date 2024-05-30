@@ -6,28 +6,28 @@ using System.IO;
 
 namespace Data
 {
-    // Uncomment these lines in Data.cs
-    // From 17 to 30
-    // 34
-    // Maybe add an ID to the balls
     // Need to check
-    //   - [ ] protect balls velocity against any influence from other balls and the environmental behavior
-    //   - [ ] prove that the protection of data (balls position on the screen) integration is implemented
-
+    // poprawienie czasu stopwatch w ballu
+    // sprawdzic czy jest ten bufor, ale wedlug mnie za to odpowiada concurrentqueue
+    // sekcja krytyczna w loggerze, ale chyba te nasze propertisy w loggerze sa immutable wiec chyba nie trzeba?
+    // sprawdzic, czy jeżeli nie da się zapisać do bufora to mają być te dane utracone 
+    
     internal class Logger
     {
         private class LoggerSerialization
         {
-            public LoggerSerialization(Vector2 position, string date)
+            public LoggerSerialization(Vector2 position, string date, int id)
             {
                 X = position.X;
                 Y = position.Y;
                 Date = date;
+                Id = id;
             }
 
             public float X { get; }
             public float Y { get; }
             public string Date { get; }
+            public int Id { get; }
         }
 
         ConcurrentQueue<LoggerSerialization> queue;
@@ -56,7 +56,7 @@ namespace Data
 
         public void Add(IBall obj, string date)
         {
-            queue.Enqueue(new LoggerSerialization(obj.Position, date));
+            queue.Enqueue(new LoggerSerialization(obj.Position, date, obj.Id));
         }
     }
 }

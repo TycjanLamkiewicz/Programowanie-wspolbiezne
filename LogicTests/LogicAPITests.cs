@@ -59,6 +59,7 @@ namespace LogicTests
             private Vector2 speed;
             private readonly int radius;
             private readonly int mass;
+            private readonly int id;
 
             private bool is_running = true;
             private readonly int period = 5;
@@ -69,14 +70,17 @@ namespace LogicTests
             public Vector2 Speed { get => speed; set => speed = value; }
             public int Radius { get => radius; }
             public int Mass { get => mass; }
+            public int Id { get => id; }
+
 
             // Constructor
-            public Ball(Vector2 position, Vector2 speed, int radius, int mass)
+            public Ball(Vector2 position, Vector2 speed, int radius, int mass, int id)
             {
                 this.position = position;
                 this.speed = speed;
                 this.radius = radius;
                 this.mass = mass;
+                this.id = id;
             }
 
             // Event triggered when the position of the ball changes

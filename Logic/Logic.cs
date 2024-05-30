@@ -26,11 +26,13 @@ namespace Logic
             Random rnd = new Random();
             int radius = 25;    // All balls are assumed to be the same
             int mass = 5;
+            int id = 0;
 
             // Generate balls with random positions and add them to the DataAPI
             for (int i = 0; i < num; i++) 
             {
-                IBall ball = IBall.CreateBall(new Vector2(rnd.Next(radius, width - radius), rnd.Next(radius, height - radius)), new Vector2(2,2), radius, mass);
+                id++;
+                IBall ball = IBall.CreateBall(new Vector2(rnd.Next(radius, width - radius), rnd.Next(radius, height - radius)), new Vector2(2,2), radius, mass, id);
                 dataAPI.AddBall(ball);
                 ball.PositionChange += HandlePositionChange;    // For each ball, the PositionChange event is subscribed to in order to react to changes in the ball's position.
             }
