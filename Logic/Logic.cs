@@ -24,15 +24,13 @@ namespace Logic
         public override void CreateBalls(int num, int height, int width)
         {
             Random rnd = new Random();
-            int radius = 25;    // All balls are assumed to be the same
-            int mass = 5;
             int id = 0;
 
             // Generate balls with random positions and add them to the DataAPI
             for (int i = 0; i < num; i++) 
             {
                 id++;
-                IBall ball = IBall.CreateBall(new Vector2(rnd.Next(radius, width - radius), rnd.Next(radius, height - radius)), new Vector2(2,2), radius, mass, id);
+                IBall ball = IBall.CreateBall(new Vector2(rnd.Next(25, width - 25), rnd.Next(25, height - 25)), new Vector2(2,2), id);
                 dataAPI.AddBall(ball);
                 ball.PositionChange += HandlePositionChange;    // For each ball, the PositionChange event is subscribed to in order to react to changes in the ball's position.
             }
@@ -41,11 +39,6 @@ namespace Logic
         public override void RemoveBalls()
         {
             dataAPI.RemoveBalls();
-        }
-
-        public override int GetRadius()
-        {
-            return 25;
         }
 
         public override List<Vector2> GetPositions()
@@ -83,13 +76,13 @@ namespace Logic
             Vector2 newSpeed = ball.Speed;
 
             // Ensure the ball stays within the x-axis bounds of the table
-            if (ball.Position.X < 0 || ball.Position.X + ball.Radius >= tableWidth)
+            if (ball.Position.X < 0 || ball.Position.X + 25 >= tableWidth)
             {
                 newSpeed.X = ball.Speed.X * -1;       // Reverse the x-direction speed
             }
 
             // Ensure the ball stays within the y-axis bounds of the table
-            if (ball.Position.Y < 0 || ball.Position.Y + ball.Radius >= tableHeight)
+            if (ball.Position.Y < 0 || ball.Position.Y + 25 >= tableHeight)
             {
                 newSpeed.Y = ball.Speed.Y * -1;       // Reverse the y-direction speed
             }
@@ -115,19 +108,19 @@ namespace Logic
                         float distance = (float)Math.Sqrt(dx * dx + dy * dy);
 
                         // Check if the collision is close to the wall
-                        bool nearWall = ball.Position.X - ball.Radius <= 0 || ball.Position.X + ball.Radius >= tableWidth ||
-                                        ball.Position.Y - ball.Radius <= 0 || ball.Position.Y + ball.Radius >= tableHeight;
+                        bool nearWall = ball.Position.X - 25 <= 0 || ball.Position.X + 25 >= tableWidth ||
+                                        ball.Position.Y - 25 <= 0 || ball.Position.Y + 25 >= tableHeight;
 
                         // Check if a collision occurs and it's not near the wall
-                        if (distance - ball.Radius <= 0 && !nearWall)
+                        if (distance - 25 <= 0 && !nearWall)
                         {
                             float speed1_x, speed1_y, speed2_x, speed2_y;
 
                             // Calculate the new velocities of both balls after the collision
-                            speed1_x = (ball.Mass * ball.Speed.X + ball2.Mass * ball2.Speed.X - ball2.Mass * (ball.Speed.X - ball2.Speed.X)) / (ball.Mass + ball2.Mass);
-                            speed1_y = (ball.Mass * ball.Speed.Y + ball2.Mass * ball2.Speed.Y - ball2.Mass * (ball.Speed.Y - ball2.Speed.Y)) / (ball.Mass + ball2.Mass);
-                            speed2_x = (ball.Mass * ball.Speed.X + ball2.Mass * ball2.Speed.X - ball.Mass * (ball2.Speed.X - ball.Speed.X)) / (ball.Mass + ball2.Mass);
-                            speed2_y = (ball.Mass * ball.Speed.Y + ball2.Mass * ball2.Speed.Y - ball2.Mass * (ball2.Speed.Y - ball.Speed.Y)) / (ball.Mass + ball2.Mass);
+                            speed1_x = (5 * ball.Speed.X + 5 * ball2.Speed.X - 5 * (ball.Speed.X - ball2.Speed.X)) / (5 + 5);
+                            speed1_y = (5 * ball.Speed.Y + 5 * ball2.Speed.Y - 5 * (ball.Speed.Y - ball2.Speed.Y)) / (5 + 5);
+                            speed2_x = (5 * ball.Speed.X + 5 * ball2.Speed.X - 5 * (ball2.Speed.X - ball.Speed.X)) / (5 + 5);
+                            speed2_y = (5 * ball.Speed.Y + 5 * ball2.Speed.Y - 5 * (ball2.Speed.Y - ball.Speed.Y)) / (5 + 5);
 
                             // Update the speeds of both balls
                             ball.Speed = new Vector2(speed1_x, speed1_y);

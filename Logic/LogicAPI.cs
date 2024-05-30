@@ -16,9 +16,6 @@ namespace Logic
         // Abstract method to remove all balls
         public abstract void RemoveBalls();
 
-        // Abstract method to get the radius of balls
-        public abstract int GetRadius();
-
         // Abstract method to get positions of all balls
         public abstract List<Vector2> GetPositions();
 

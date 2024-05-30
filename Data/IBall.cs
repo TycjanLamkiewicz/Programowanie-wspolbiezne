@@ -10,8 +10,6 @@ namespace Data
         // Properties
         public abstract Vector2 Position { get; }
         public abstract Vector2 Speed { get; set; }
-        public abstract int Radius { get; }
-        public abstract int Mass { get; }
         public abstract int Id { get; }
         public void StopTask();
 
@@ -19,9 +17,9 @@ namespace Data
         public event EventHandler PositionChange;
         
         // Method to create a new ball instance with specified parameters
-        public static IBall CreateBall(Vector2 position, Vector2 speed, int radius, int mass, int id) 
+        public static IBall CreateBall(Vector2 position, Vector2 speed, int id) 
         {
-            return new Ball(position, speed, radius, mass, id);
+            return new Ball(position, speed, id);
         }
     }
 }

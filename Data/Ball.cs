@@ -13,8 +13,6 @@ namespace Data
         // Private fields
         private Vector2 position;
         private Vector2 speed;
-        private readonly int radius;
-        private readonly int mass;
         private readonly int id;
 
         private bool is_running = true;
@@ -32,17 +30,13 @@ namespace Data
             }
             private set => position = value; }
         public Vector2 Speed { get => speed; set => speed = value; }
-        public int Radius { get => radius; }
-        public int Mass { get => mass; }
         public int Id { get => id; }
 
         // Constructor
-        public Ball(Vector2 position, Vector2 speed, int radius, int mass, int id) 
+        public Ball(Vector2 position, Vector2 speed, int id) 
         { 
             this.position = position;
             this.speed = speed;
-            this.radius = radius;
-            this.mass = mass;
             this.id = id;
 
             CreateTask();   // Create a task to move the ball
@@ -80,12 +74,6 @@ namespace Data
                 {
                     stopwatch.Restart();    // Restart the stopwatch to measure time
                     stopwatch.Start();      // Start the stopwatch
-                    // Do move musi byc przekazany czas
-                    // Blad ze stopwatchem zeby nnie byl calkowany (dodawany za kazdym razem)
-                    // Po restarcie jest on dodawany 
-                    // Trzeba wziac roznice??
-                    // nie wolno robic restartu, tylko od tego obliczyc roznice??
-                    // 
                     Move();
                     stopwatch.Stop();       // Stop the stopwatch
 

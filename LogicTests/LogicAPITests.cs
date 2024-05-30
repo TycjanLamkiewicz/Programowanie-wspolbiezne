@@ -57,8 +57,6 @@ namespace LogicTests
             // Private fields
             private Vector2 position;
             private Vector2 speed;
-            private readonly int radius;
-            private readonly int mass;
             private readonly int id;
 
             private bool is_running = true;
@@ -68,18 +66,14 @@ namespace LogicTests
             // Properties
             public Vector2 Position { get => position; private set => position = value; }
             public Vector2 Speed { get => speed; set => speed = value; }
-            public int Radius { get => radius; }
-            public int Mass { get => mass; }
             public int Id { get => id; }
 
 
             // Constructor
-            public Ball(Vector2 position, Vector2 speed, int radius, int mass, int id)
+            public Ball(Vector2 position, Vector2 speed, int id)
             {
                 this.position = position;
                 this.speed = speed;
-                this.radius = radius;
-                this.mass = mass;
                 this.id = id;
             }
 
@@ -133,20 +127,6 @@ namespace LogicTests
 
             // Assert
             Assert.Empty(positions);
-        }
-
-        // Test for getting the radius of balls
-        [Fact]
-        public void GetRadiusTest()
-        {
-            // Arrange
-            LogicAPI logicAPI = LogicAPI.CreateAPI(new DataTest());
-
-            // Act
-            int radius = logicAPI.GetRadius();
-
-            // Assert
-            Assert.Equal(25, radius);
         }
     }
 }

@@ -44,7 +44,7 @@ namespace Model
         public override ObservableCollection<IBallModel> GetBallsModel()
         {
             ballsModel.Clear();                     // Clear the existing ball models collection
-            int radius = logicAPI.GetRadius();      // Get the radius of the balls from LogicAPI
+            int radius = 25;                        // Radius of the balls
 
             // Iterate through each ball position from LogicAPI and create corresponding ball models
             foreach (Vector2 ball in logicAPI.GetPositions())
