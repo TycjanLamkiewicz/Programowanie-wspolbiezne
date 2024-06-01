@@ -15,6 +15,8 @@ namespace LogicTests
             // List to store balls
             private List<IBall> balls = new List<IBall>();
 
+            public override event EventHandler<Tuple<Vector2, int>> PositionEvent;
+
             public override List<IBall>? Balls { get => balls; }
 
             public override void AddBall(IBall ball)
@@ -75,6 +77,19 @@ namespace LogicTests
                 this.position = position;
                 this.speed = speed;
                 this.id = id;
+            }
+
+            event EventHandler<Tuple<Vector2, int>> IBall.PositionChange
+            {
+                add
+                {
+                    throw new NotImplementedException();
+                }
+
+                remove
+                {
+                    throw new NotImplementedException();
+                }
             }
 
             // Event triggered when the position of the ball changes
