@@ -6,21 +6,6 @@ using System.IO;
 
 namespace Data
 {
-    // TODO
-    // Need to check
-    // poprawienie czasu stopwatch w ballu
-    // sprawdzic czy jest ten bufor, ale wedlug mnie za to odpowiada concurrentqueue
-    // sekcja krytyczna w loggerze, ale chyba te nasze propertisy w loggerze sa immutable wiec chyba nie trzeba?
-    // sprawdzic, czy jeżeli nie da się zapisać do bufora to mają być te dane utracone 
-
-    // W BALL W STOPWATCHU
-    // Do move musi byc przekazany czas
-    // Blad ze stopwatchem zeby nie byl calkowany (dodawany za kazdym razem)
-    // Po restarcie jest on dodawany 
-    // Trzeba wziac roznice??
-    // nie wolno robic restartu, tylko od tego obliczyc roznice??
-    // 
-
     internal class Logger
     {
         private class LoggerSerialization
