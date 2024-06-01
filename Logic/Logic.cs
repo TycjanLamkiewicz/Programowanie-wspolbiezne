@@ -30,7 +30,7 @@ namespace Logic
             for (int i = 0; i < num; i++) 
             {
                 id++;
-                IBall ball = IBall.CreateBall(new Vector2(rnd.Next(25, width - 25), rnd.Next(25, height - 25)), new Vector2(2,2), id);
+                IBall ball = IBall.CreateBall(new Vector2(rnd.Next(25, width - 25), rnd.Next(25, height - 25)), new Vector2(0.25f,0.25f), id);
                 dataAPI.AddBall(ball);
                 ball.PositionChange += HandlePositionChange;    // For each ball, the PositionChange event is subscribed to in order to react to changes in the ball's position.
             }
@@ -76,15 +76,24 @@ namespace Logic
             Vector2 newSpeed = ball.Speed;
 
             // Ensure the ball stays within the x-axis bounds of the table
-            if (ball.Position.X < 0 || ball.Position.X + 25 >= tableWidth)
+            if (ball.Position.X <= 0)
             {
-                newSpeed.X = ball.Speed.X * -1;       // Reverse the x-direction speed
+                newSpeed.X = Math.Abs(ball.Speed.X);
+            }
+
+            if (ball.Position.X + 25 >= tableWidth)
+            {
+                newSpeed.X = -Math.Abs(ball.Speed.X);
             }
 
             // Ensure the ball stays within the y-axis bounds of the table
-            if (ball.Position.Y < 0 || ball.Position.Y + 25 >= tableHeight)
+            if (ball.Position.Y <= 0)
             {
-                newSpeed.Y = ball.Speed.Y * -1;       // Reverse the y-direction speed
+                newSpeed.Y = Math.Abs(ball.Speed.Y);
+            }
+            if (ball.Position.Y + 25 >= tableHeight)
+            {
+                newSpeed.Y = -Math.Abs(ball.Speed.Y);
             }
 
             // Update the ball's speed with the new values

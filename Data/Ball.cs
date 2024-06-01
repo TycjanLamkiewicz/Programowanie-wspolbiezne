@@ -16,20 +16,46 @@ namespace Data
         private readonly int id;
 
         private bool is_running = true;
-        private readonly int period = 5;
-        private readonly object lock_move = new object();
+        private readonly int period = 4;
+        private readonly object lock_position = new object();
+        private readonly object lock_speed = new object();
 
         // Properties
-        public Vector2 Position { 
+        public Vector2 Position 
+        { 
             get
             {
-                lock (lock_move)
+                lock (lock_position)
                 {
                     return position;
                 }
             }
-            private set => position = value; }
-        public Vector2 Speed { get => speed; set => speed = value; }
+            private set
+            {
+                lock(lock_position)
+                {
+                    position = value;
+                }
+                OnPositionChange();
+            }
+        }
+        public Vector2 Speed 
+        {
+            get
+            {
+                lock(lock_speed)
+                {
+                    return speed;
+                }
+            }
+            set
+            {
+                lock (lock_speed)
+                {
+                    speed = value;
+                }
+            }
+        }
         public int Id { get => id; }
 
         // Constructor
@@ -52,15 +78,10 @@ namespace Data
             PositionChange?.Invoke(this, EventArgs.Empty);
         }
 
-        private void Move()
+        private void Move(int elapsed_time)
         {
-            lock(lock_move)
-            {
-                // Update ball position based on current speed
-                Position += Speed * 1;
-            }
-            // Trigger the PositionChange event to indicate that the ball's position has changed.
-            OnPositionChange();
+            // Update ball position based on current speed
+            Position += Speed * elapsed_time;
         }
 
         private void CreateTask()
@@ -69,22 +90,22 @@ namespace Data
             {
                 Stopwatch stopwatch = new Stopwatch();
                 int waiting = 0;            // This variable will store the waiting time before the next ball movement is made.
+                int last_move = 0;
+
+                stopwatch.Start();
 
                 while (is_running)
                 {
-                    stopwatch.Restart();    // Restart the stopwatch to measure time
-                    stopwatch.Start();      // Start the stopwatch
-                    Move();
-                    stopwatch.Stop();       // Stop the stopwatch
+                    int current_time = (int)stopwatch.ElapsedMilliseconds;
+                    int elapsed_time = current_time - last_move;
+                    
+                    Move(elapsed_time);
 
-                    // This conditional instruction calculates the waiting time before the next ball movement is made.
-                    // It subtracts the duration of the ball movement from the expected period between movements.
-                    // If the result is greater than 0, the ball will wait for this time.
-                    // Otherwise,if the duration of the ball's movement is longer than the expected period, the waiting variable will be equal to 0,
-                    // meaning that the ball will continue moving immediately.
-                    if (period - stopwatch.ElapsedMilliseconds > 0)
+                    last_move = current_time;
+
+                    if (period - elapsed_time > 0)
                     {
-                        waiting = period - (int)stopwatch.ElapsedMilliseconds;
+                        waiting = period - elapsed_time;
                     }
                     else
                     {
