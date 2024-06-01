@@ -15,16 +15,16 @@ namespace Data
         public override List<IBall>? Balls { get => balls; }
 
         private Logger logger;
-        public event EventHandler PositionEvent;
+        public override event EventHandler<Tuple<Vector2, int>> PositionEvent;
 
         public Data()
         {
             logger = new Logger();
         }
 
-        private void PositionChanged(object sender, EventArgs e)
+        private void PositionChanged(object sender, Tuple<Vector2,int> e)
         {
-            PositionEvent?.Invoke(sender, EventArgs.Empty);
+            PositionEvent?.Invoke(sender, e);
             logger.Add((IBall)sender, DateTime.UtcNow.ToString("HH:mm:ss.fff"));
         }
 

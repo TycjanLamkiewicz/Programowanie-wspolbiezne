@@ -69,13 +69,13 @@ namespace Data
         }
 
         // Event triggered when the position of the ball changes
-        public event EventHandler PositionChange;
+        public event EventHandler<Tuple<Vector2, int>> PositionChange;
         
         // This is a method that is responsible for calling the PositionChange event. 
         // It calls the event, passing itself(this) as the event sender and EventArgs.Empty as the event argument (as it does not require additional information).
         internal void OnPositionChange()
         {
-            PositionChange?.Invoke(this, EventArgs.Empty);
+            PositionChange?.Invoke(this, new Tuple<Vector2, int>(position, id));
         }
 
         private void Move(int elapsed_time)

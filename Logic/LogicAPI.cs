@@ -20,7 +20,7 @@ namespace Logic
         public abstract List<Vector2> GetPositions();
 
         // Abstract event triggered by logic operations
-        public abstract event EventHandler LogicEvent;
+        public abstract event EventHandler<Tuple<Vector2, int>> LogicEvent;
 
         // Method to create an instance of LogicAPI (using DI)
         public static LogicAPI CreateAPI()
