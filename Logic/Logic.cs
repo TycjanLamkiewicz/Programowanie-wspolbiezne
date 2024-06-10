@@ -46,13 +46,13 @@ namespace Logic
             return dataAPI.GetPositions();
         }
 
-        public override event EventHandler<Tuple<Vector2, int>> LogicEvent;      // Event (LogicEvent), which is triggered when the position of the ball changes 
+        public override event EventHandler<Tuple<Vector2, int, DateTime>> LogicEvent;      // Event (LogicEvent), which is triggered when the position of the ball changes 
 
         private readonly object lockColision = new object();
 
         // In this method a check is made to ensure that the sender is different from null to avoid calling the event on the wrong object.
         // If the sender is not null, the LogicEvent event is called, passing the sender as the sender and EventArgs.Empty as the event argument.
-        private void HandlePositionChange(object sender, Tuple<Vector2, int> e)
+        private void HandlePositionChange(object sender, Tuple<Vector2, int, DateTime> e)
         {
             // Cast the 'sender' object to an IBall interface to work with ball-specific properties
             IBall ball = (IBall)sender;

@@ -50,7 +50,7 @@ namespace Model
             return ballsModel;
         }
         
-        private void ChangeModelBallsPositions(object sender, Tuple<Vector2, int> e)
+        private void ChangeModelBallsPositions(object sender, Tuple<Vector2, int, DateTime> e)
         {
             foreach (IBallModel model in ballsModel)
             {

@@ -36,7 +36,7 @@ namespace Data
                 {
                     position = value;
                 }
-                OnPositionChange();
+                OnPositionChange(DateTime.UtcNow);
             }
         }
         public Vector2 Speed 
@@ -69,13 +69,13 @@ namespace Data
         }
 
         // Event triggered when the position of the ball changes
-        public event EventHandler<Tuple<Vector2, int>> PositionChange;
+        public event EventHandler<Tuple<Vector2, int, DateTime>> PositionChange;
         
         // This is a method that is responsible for calling the PositionChange event. 
         // It calls the event, passing itself(this) as the event sender and EventArgs.Empty as the event argument (as it does not require additional information).
-        internal void OnPositionChange()
+        internal void OnPositionChange(DateTime time)
         {
-            PositionChange?.Invoke(this, new Tuple<Vector2, int>(position, id));
+            PositionChange?.Invoke(this, new Tuple<Vector2, int, DateTime>(position, id, time));
         }
 
         private void Move(int elapsed_time)

@@ -14,7 +14,7 @@ namespace Data
         public void StopTask();
 
         // Event triggered when the position of the ball changes
-        public event EventHandler<Tuple<Vector2, int>> PositionChange;
+        public event EventHandler<Tuple<Vector2, int, DateTime>> PositionChange;
         
         // Method to create a new ball instance with specified parameters
         public static IBall CreateBall(Vector2 position, Vector2 speed, int id) 

@@ -24,7 +24,7 @@ namespace Data
         // Abstract method to get position of a specific ball
         public abstract Vector2 GetPosition(IBall ball);
 
-        public abstract event EventHandler<Tuple<Vector2, int>> PositionEvent;
+        public abstract event EventHandler<Tuple<Vector2, int, DateTime>> PositionEvent;
 
         // Static method to create an instance of DataAPI
         public static DataAPI CreateAPI()
