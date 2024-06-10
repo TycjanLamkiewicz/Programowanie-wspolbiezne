@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Numerics;
 using System.Threading.Tasks;
 using System.IO;
+using System;
 
 namespace Data
 {
@@ -48,9 +49,9 @@ namespace Data
             });
         }
 
-        public void Add(IBall obj, string date)
+        public void Add(IBall obj, DateTime date)
         {
-            queue.Enqueue(new LoggerSerialization(obj.Position, date, obj.Id));
+            queue.Enqueue(new LoggerSerialization(obj.Position, date.ToString("HH:mm:ss.fff"), obj.Id));
         }
     }
 }

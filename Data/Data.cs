@@ -25,7 +25,7 @@ namespace Data
         private void PositionChanged(object sender, Tuple<Vector2,int> e)
         {
             PositionEvent?.Invoke(sender, e);
-            logger.Add((IBall)sender, DateTime.UtcNow.ToString("HH:mm:ss.fff"));
+            logger.Add((IBall)sender, DateTime.UtcNow);
         }
 
         public override void AddBall(IBall ball)
