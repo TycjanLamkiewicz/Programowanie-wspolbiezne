@@ -9,9 +9,11 @@ namespace Data
 {
     internal class Logger
     {
+
+        private readonly int bufferSize = 100;
         private class LoggerSerialization
         {
-            public LoggerSerialization(Vector2 position, string date, int id)
+            public LoggerSerialization(Vector2 position, DateTime date, int id)
             {
                 X = position.X;
                 Y = position.Y;
@@ -21,7 +23,7 @@ namespace Data
 
             public float X { get; }
             public float Y { get; }
-            public string Date { get; }
+            public DateTime Date { get; }
             public int Id { get; }
         }
 
@@ -51,7 +53,16 @@ namespace Data
 
         public void Add(IBall obj, DateTime date)
         {
-            queue.Enqueue(new LoggerSerialization(obj.Position, date.ToString("HH:mm:ss.fff"), obj.Id));
+            lock (queue)
+            {
+                if (queue.Count >= bufferSize)
+                {
+                    return;
+
+                }
+
+                queue.Enqueue(new LoggerSerialization(obj.Position, date, obj.Id));
+            }
         }
     }
 }
